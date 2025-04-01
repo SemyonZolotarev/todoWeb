@@ -35,7 +35,7 @@ public class TaskController {
 
         try {
             return ResponseEntity.ok(taskService.changeTask(taskDTO, userId, field));
-        } catch (UserNotFoundException | TaskNotFoundException | IllegalStateException e) {
+        } catch (UserNotFoundException | TaskNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Ошибка редактирования задачи.");

@@ -14,17 +14,14 @@ import ru.zolotarev.todo.mappers.TaskMapper;
 import ru.zolotarev.todo.repositories.TaskRepository;
 import ru.zolotarev.todo.repositories.UserRepository;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class TaskService {
-    private final TaskRepository taskRepository;
 
+    private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
     private final UserRepository userRepository;
     private final TaskListMapper taskListMapper;
@@ -43,14 +40,14 @@ public class TaskService {
     }
 
     public TaskDTO changeTask(TaskDTO taskDTO, Long userId, String field)
-            throws UserNotFoundException, TaskNotFoundException, IllegalStateException {
+            throws UserNotFoundException, TaskNotFoundException {
 
         UserEntity userEntity = userRepository.findById(userId).orElseThrow(() ->
                 new UserNotFoundException(userId));
 
         TaskEntity taskEntity = userEntity.getTasks()
                 .stream()
-                .filter(t -> t.getId() == taskDTO.getId())
+                .filter(t -> Objects.equals(t.getId(), taskDTO.getId()))
                 .findFirst().orElseThrow(() ->
                         new TaskNotFoundException(taskDTO.getId()));
 

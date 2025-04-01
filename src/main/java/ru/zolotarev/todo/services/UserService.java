@@ -21,7 +21,7 @@ public class UserService {
     private final UserListMapper userListMapper;
 
     public UserDTO createUser(UserEntity userEntity) throws UserAlreadyExistException {
-        if(userRepository.existsByEmail(userEntity.getEmail())){
+        if (userRepository.existsByEmail(userEntity.getEmail())) {
             throw new UserAlreadyExistException();
         }
         return userMapper.toDTO(userRepository.save(userEntity));
@@ -35,12 +35,12 @@ public class UserService {
     }
 
     public String deleteUserById(Long id) throws UserNotFoundException {
-        try {
+
+        if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
-            return "Пользователь с id: '"+id+"' удален.";
-        } catch (Exception e) {
-            throw new UserNotFoundException(id);
+            return "Пользователь с id: '" + id + "' удален.";
         }
+        throw new UserNotFoundException(id);
     }
 
     public List<UserDTO> getAllUsers() {
