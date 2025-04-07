@@ -10,5 +10,4 @@ import ru.zolotarev.todo.entities.UserEntity;
 public interface UserMapper {
 
     UserDTO toDTO(UserEntity userEntity);
-
 }

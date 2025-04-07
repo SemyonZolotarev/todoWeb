@@ -27,7 +27,8 @@ public class TaskEntity {
     private UserEntity userEntity;
 
     @Column
-    private String taskStatus = String.valueOf(TaskStatus.TODO);
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status = TaskStatus.TODO;
 
     @Column
     private LocalDate deadline = LocalDate.now().plusDays(1);

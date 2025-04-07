@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.zolotarev.todo.dto.UserDTO;
 import ru.zolotarev.todo.entities.UserEntity;
-import ru.zolotarev.todo.exceptions.task.UserAlreadyExistException;
 import ru.zolotarev.todo.exceptions.user.UserNotFoundException;
 import ru.zolotarev.todo.mappers.UserListMapper;
 import ru.zolotarev.todo.mappers.UserMapper;
@@ -20,9 +19,9 @@ public class UserService {
     private final UserMapper userMapper;
     private final UserListMapper userListMapper;
 
-    public UserDTO createUser(UserEntity userEntity) throws UserAlreadyExistException {
+    public UserDTO createUser(UserEntity userEntity) throws Exception {
         if (userRepository.existsByEmail(userEntity.getEmail())) {
-            throw new UserAlreadyExistException();
+            throw new Exception();
         }
         return userMapper.toDTO(userRepository.save(userEntity));
     }

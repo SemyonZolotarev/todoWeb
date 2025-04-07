@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.zolotarev.todo.dto.UserDTO;
 import ru.zolotarev.todo.entities.UserEntity;
-import ru.zolotarev.todo.exceptions.task.UserAlreadyExistException;
 import ru.zolotarev.todo.exceptions.user.UserNotFoundException;
 import ru.zolotarev.todo.mappers.UserListMapper;
 import ru.zolotarev.todo.mappers.UserMapper;
@@ -53,7 +52,7 @@ class UserServiceTest {
     }
 
     @Test
-    void createUserTest_UserDoesNotExist_CreateSuccessfully() throws UserAlreadyExistException {
+    void createUserTest_UserDoesNotExist_CreateSuccessfully() throws Exception {
 
         when(userRepository.existsByEmail(userEntitySetUp.getEmail())).thenReturn(false);
         when(userRepository.save(userEntitySetUp)).thenReturn(userEntitySetUp);
@@ -68,16 +67,16 @@ class UserServiceTest {
     }
 
     @Test
-    void createUserTest_UserExist_ThrowUserAlreadyExistException() {
+    void createUserTest_UserExist_ThrowException() {
 
         when(userRepository.existsByEmail(userEntitySetUp.getEmail())).thenReturn(true);
 
-        assertThrows(UserAlreadyExistException.class, () -> {
+        assertThrows(Exception.class, () -> {
             userService.createUser(userEntitySetUp);
         });
 
         verify(userRepository, times(1)).existsByEmail(userEntitySetUp.getEmail());
-        verify(userRepository, times(0)).save(userEntitySetUp);
+        verify(userRepository, never()).save(userEntitySetUp);
     }
 
 
@@ -112,7 +111,7 @@ class UserServiceTest {
 
         String result = userService.deleteUserById(ID);
 
-        assertEquals("Пользователь с id: '1' удален.", result);
+        assertEquals("Пользователь с id: '" + ID + "' удален.", result);
 
         verify(userRepository, times(1)).deleteById(ID);
     }

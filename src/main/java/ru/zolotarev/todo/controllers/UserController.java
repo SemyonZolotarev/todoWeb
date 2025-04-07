@@ -5,14 +5,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.zolotarev.todo.dto.UserDTO;
 import ru.zolotarev.todo.entities.UserEntity;
-import ru.zolotarev.todo.exceptions.task.UserAlreadyExistException;
 import ru.zolotarev.todo.exceptions.user.UserNotFoundException;
 import ru.zolotarev.todo.services.UserService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1.2/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -22,8 +21,6 @@ public class UserController {
     public ResponseEntity<?> createUser(@RequestBody UserEntity userEntity) {
         try {
             return ResponseEntity.ok(userService.createUser(userEntity));
-        } catch (UserAlreadyExistException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Ошибка создания нового пользователя.");
         }

@@ -5,12 +5,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.zolotarev.todo.dto.TaskDTO;
 import ru.zolotarev.todo.entities.TaskEntity;
+import ru.zolotarev.todo.enums.SortByDeadlineMethods;
+import ru.zolotarev.todo.enums.TaskFields;
+import ru.zolotarev.todo.enums.TaskStatus;
 import ru.zolotarev.todo.exceptions.task.TaskNotFoundException;
 import ru.zolotarev.todo.exceptions.user.UserNotFoundException;
 import ru.zolotarev.todo.services.TaskService;
 
 @RestController
-@RequestMapping("users/{userId}/tasks")
+@RequestMapping("/api/v1.2/users/{userId}/tasks")
 @RequiredArgsConstructor
 public class TaskController {
 
@@ -31,7 +34,7 @@ public class TaskController {
     @PutMapping("/{field}")
     public ResponseEntity<?> changeTask(@RequestBody TaskDTO taskDTO,
                                         @PathVariable Long userId,
-                                        @PathVariable String field) {
+                                        @PathVariable TaskFields field) {
 
         try {
             return ResponseEntity.ok(taskService.changeTask(taskDTO, userId, field));
@@ -55,7 +58,7 @@ public class TaskController {
 
     @GetMapping("/{status}")
     public ResponseEntity<?> filterTasksByStatus(@PathVariable Long userId,
-                                                 @PathVariable String status) {
+                                                 @PathVariable TaskStatus status) {
         try {
             return ResponseEntity.ok(taskService.filterTasksByStatus(userId, status));
         } catch (UserNotFoundException e) {
@@ -72,8 +75,6 @@ public class TaskController {
                                                @RequestParam String third) {
         try {
             return ResponseEntity.ok(taskService.sortTasksByStatus(userId, first, second, third));
-        } catch (UserNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Ошибка сортировки задач по статусу.");
         }
@@ -81,11 +82,9 @@ public class TaskController {
 
     @GetMapping("/deadline")
     public ResponseEntity<?> tasksByDeadline(@PathVariable Long userId,
-                                             @RequestParam String queue) {
+                                             @RequestParam SortByDeadlineMethods methods) {
         try {
-            return ResponseEntity.ok(taskService.sortTaskByDeadline(userId, queue));
-        } catch (UserNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.ok(taskService.sortTaskByDeadline(userId, methods));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Ошибка сортировки задач по дедлайну.");
         }
