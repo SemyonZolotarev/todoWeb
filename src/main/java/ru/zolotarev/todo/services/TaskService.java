@@ -31,22 +31,14 @@ public class TaskService {
                 new Exception());
     }
 
-    //    public TaskDTO createTask(TaskDTO taskDTO, Long userId) throws UserNotFoundException {
-//        if (userRepository.existsById(userId)) {
-//            UserEntity userEntity = userRepository.findById(userId).get();
-//            TaskEntity taskEntity = taskMapper.toEntity(taskDTO);
-//            taskEntity.setUserEntity(userEntity);
-//            taskRepository.save(taskEntity);
-//            return taskDTO;
-//        }
-//        throw new UserNotFoundException(userId);
-//    }
-    public TaskDTO createTask(TaskEntity taskEntity, Long userId) throws UserNotFoundException {
-        UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() ->
-                        new UserNotFoundException(userId));
-        taskEntity.setUserEntity(userEntity);
-        return taskMapper.toDTO(taskRepository.save(taskEntity));
+    public TaskDTO createTask(TaskDTO taskDTO, Long userId) throws UserNotFoundException {
+        if (userRepository.existsById(userId)) {
+            UserEntity userEntity = userRepository.findById(userId).get();
+            TaskEntity taskEntity = taskMapper.toEntity(taskDTO);
+            taskEntity.setUserEntity(userEntity);
+           return taskMapper.toDTO(taskRepository.save(taskEntity));
+        }
+        throw new UserNotFoundException(userId);
     }
 
     public TaskDTO changeTask(TaskDTO taskDTO, Long userId, TaskFields field)

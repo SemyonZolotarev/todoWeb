@@ -20,10 +20,10 @@ public class TaskController {
     private final TaskService taskService;
 
     @PostMapping()
-    public ResponseEntity<?> createTask(@RequestBody TaskEntity taskEntity,
+    public ResponseEntity<?> createTask(@RequestBody TaskDTO taskDTO,
                                         @PathVariable Long userId) {
         try {
-            return ResponseEntity.ok(taskService.createTask(taskEntity, userId));
+            return ResponseEntity.ok(taskService.createTask(taskDTO, userId));
         } catch (UserNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
