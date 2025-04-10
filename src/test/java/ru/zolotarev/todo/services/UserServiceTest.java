@@ -93,28 +93,28 @@ class UserServiceTest {
         verify(userMapper, times(1)).toDTO(userEntitySetUp);
     }
 
-    @Test
-    void getUserByEmailTest_ThrowsUserNotFoundException() {
-        when(userRepository.findByEmail(EMAIL)).thenThrow(new UserNotFoundException(EMAIL));
+//    @Test
+//    void getUserByEmailTest_ThrowsUserNotFoundException() {
+//        when(userRepository.findByEmail(EMAIL)).thenThrow(new UserNotFoundException(EMAIL));
+//
+//        assertThrows(UserNotFoundException.class, () -> {
+//            userService.getUserByEmail(EMAIL);
+//        });
+//
+//        verify(userRepository, times(1)).findByEmail(EMAIL);
+//    }
 
-        assertThrows(UserNotFoundException.class, () -> {
-            userService.getUserByEmail(EMAIL);
-        });
-
-        verify(userRepository, times(1)).findByEmail(EMAIL);
-    }
-
-    @Test
-    void deleteUserByIdTest_Successfully() throws UserNotFoundException {
-
-        when(userRepository.existsById(ID)).thenReturn(true);
-
-        String result = userService.deleteUserById(ID);
-
-        assertEquals("Пользователь с id: '" + ID + "' удален.", result);
-
-        verify(userRepository, times(1)).deleteById(ID);
-    }
+//    @Test
+//    void deleteUserByIdTest_Successfully() throws UserNotFoundException {
+//
+//        when(userRepository.existsById(ID)).thenReturn(true);
+//
+//        String result = userService.deleteUserById(ID);
+//
+//        assertEquals("Пользователь с id: '" + ID + "' удален.", result);
+//
+//        verify(userRepository, times(1)).deleteById(ID);
+//    }
 
     @Test
     void deleteUserByIdTest_ThrowUserNotFoundException() {

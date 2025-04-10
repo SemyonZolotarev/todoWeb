@@ -21,7 +21,7 @@ public class UserEntity {
     @Column
     private String password;
 
-    @Column
+    @Column(unique = true)
     private String email;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userEntity")

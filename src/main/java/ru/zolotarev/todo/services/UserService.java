@@ -2,9 +2,9 @@ package ru.zolotarev.todo.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.zolotarev.todo.dto.UserDTO;
 import ru.zolotarev.todo.entities.UserEntity;
-import ru.zolotarev.todo.exceptions.user.UserNotFoundException;
 import ru.zolotarev.todo.mappers.UserListMapper;
 import ru.zolotarev.todo.mappers.UserMapper;
 import ru.zolotarev.todo.repositories.UserRepository;
@@ -19,32 +19,25 @@ public class UserService {
     private final UserMapper userMapper;
     private final UserListMapper userListMapper;
 
-    public UserDTO createUser(UserEntity userEntity) throws Exception {
-        if (userRepository.existsByEmail(userEntity.getEmail())) {
-            throw new Exception();
-        }
+    @Transactional
+    public UserDTO createUser(UserEntity userEntity) {
         return userMapper.toDTO(userRepository.save(userEntity));
     }
 
-    public UserDTO getUserByEmail(String email) throws UserNotFoundException {
-        UserEntity userEntity = userRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new UserNotFoundException(email));
+    @Transactional
+    public UserDTO getUserByEmail(String email) {
+        UserEntity userEntity = userRepository.findByEmail(email).get();
         return userMapper.toDTO(userEntity);
     }
 
-    public String deleteUserById(Long id) throws UserNotFoundException {
-
-        if (userRepository.existsById(id)) {
-            userRepository.deleteById(id);
-            return "Пользователь с id: '" + id + "' удален.";
-        }
-        throw new UserNotFoundException(id);
+    @Transactional
+    public void deleteUserById(Long id) {
+        userRepository.deleteById(id);
     }
 
+    @Transactional
     public List<UserDTO> getAllUsers() {
-        List<UserEntity> userEntityList = (List<UserEntity>) userRepository.findAll();
-        return userListMapper.toDTO(userEntityList);
+        return userListMapper.toDTO(userRepository.findAll());
     }
 
 }

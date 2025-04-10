@@ -5,13 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.zolotarev.todo.dto.UserDTO;
 import ru.zolotarev.todo.entities.UserEntity;
-import ru.zolotarev.todo.exceptions.user.UserNotFoundException;
 import ru.zolotarev.todo.services.UserService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1.2/users")
+@RequestMapping("/api/v1.3/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -29,9 +28,8 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         try {
-            return ResponseEntity.ok(userService.deleteUserById(id));
-        } catch (UserNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            userService.deleteUserById(id);
+            return ResponseEntity.ok("Пользователь успешно удален");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Ошибка удаления пользователя.");
         }
@@ -41,8 +39,6 @@ public class UserController {
     public ResponseEntity<?> getUserByEmail(@PathVariable String email) {
         try {
             return ResponseEntity.ok(userService.getUserByEmail(email));
-        } catch (UserNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Ошибка получения пользователя по email.");
         }
