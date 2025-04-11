@@ -60,7 +60,7 @@ public class TaskController {
     public ResponseEntity<?> tasksByDeadline(@PathVariable Long userId,
                                              @RequestParam SortByDeadlineMethods method) {
         try {
-            return ResponseEntity.ok(taskService.sortTaskByDeadline(userId, method));
+            return ResponseEntity.ok(taskService.sortTasksByDeadline(userId, method));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Ошибка сортировки задач по дедлайну.");
         }

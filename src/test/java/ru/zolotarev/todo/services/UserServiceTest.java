@@ -73,6 +73,7 @@ class UserServiceTest {
         assertThrows(DataIntegrityViolationException.class, () -> {
             userService.createUser(userEntity);
         });
+
         verifyNoInteractions(userMapper);
     }
 
@@ -91,7 +92,8 @@ class UserServiceTest {
     }
 
     @Test
-    void getUserByEmailTest_ThrowsUserNotFoundException() {
+    void getUserByEmailTest_invalidOrIncorrectEmail_ThrowsException() {
+
         when(userRepository.findByEmail(EMAIL)).thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class, () -> {
@@ -101,41 +103,17 @@ class UserServiceTest {
         verify(userRepository, times(1)).findByEmail(EMAIL);
     }
 
-//    @Test
-//    void deleteUserByIdTest_Successfully(){
-//
-//        when(userRepository.existsById(ID)).thenReturn(true);
-//
-//        String result = userService.deleteUserById(ID);
-//
-//        assertEquals("Пользователь с id: '" + ID + "' удален.", result);
-//
-//        verify(userRepository, times(1)).deleteById(ID);
-//    }
-
-//    @Test
-//    void deleteUserByIdTest_ThrowUserNotFoundException() {
-//
-//        when(userRepository.existsById(ID)).thenReturn(false);
-//
-//        assertThrows(UserNotFoundException.class, () -> {
-//            userService.deleteUserById(ID);
-//        });
-//
-//        verify(userRepository, never()).deleteById(ID);
-//    }
-
     @Test
     void getAllUsersTest() {
 
-        UserEntity userEntity = new UserEntity();
-        UserDTO userDTO = new UserDTO();
-        List<UserEntity> userEntityList = List.of(this.userEntity, userEntity);
+        UserEntity newUserEntity = new UserEntity();
+        UserDTO newUserDTO = new UserDTO();
+        List<UserEntity> userEntityList = List.of(userEntity, newUserEntity);
 
         when(userRepository.findAll()).thenReturn(userEntityList);
-        when(userListMapper.toDTO(userEntityList)).thenReturn(List.of(this.userDTO, userDTO));
+        when(userListMapper.toDTO(userEntityList)).thenReturn(List.of(userDTO, newUserDTO));
 
-        assertEquals(userService.getAllUsers(), List.of(this.userDTO, userDTO));
+        assertEquals(userService.getAllUsers(), List.of(userDTO, newUserDTO));
 
         verify(userRepository, times(1)).findAll();
         verify(userListMapper, times(1)).toDTO(userEntityList);

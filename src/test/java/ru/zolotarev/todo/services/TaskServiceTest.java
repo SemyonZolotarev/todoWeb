@@ -15,9 +15,9 @@ import ru.zolotarev.todo.enums.TaskFields;
 import ru.zolotarev.todo.enums.TaskStatus;
 import ru.zolotarev.todo.mappers.TaskMapper;
 import ru.zolotarev.todo.repositories.TaskRepository;
-import ru.zolotarev.todo.repositories.UserRepository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,8 +43,6 @@ class TaskServiceTest {
 
     @Mock
     private TaskRepository taskRepository;
-    @Mock
-    private UserRepository userRepository;
     @Mock
     private TaskMapper taskMapper;
 
@@ -77,52 +75,50 @@ class TaskServiceTest {
         userEntity.setEmail(USER_EMAIL);
     }
 
-//    @Test
-//    void createTaskTest_Successfully() {
-//
-//        Optional<UserEntity> optionalUserEntity = Optional.of(userEntity);
-//
-//        when(userRepository.existsById(USER_ID)).thenReturn(true);
-//        when(userRepository.findById(USER_ID)).thenReturn(optionalUserEntity);
-//        when(taskMapper.toEntity(taskDTO)).thenReturn(taskEntity);
-//        when(taskRepository.save(taskEntity)).thenReturn(taskEntity);
-//        when(taskMapper.toDTO(taskEntity)).thenReturn(taskDTO);
-//
-//        TaskDTO createdTask = taskService.createTask(taskDTO, USER_ID);
-//
-//        assertEquals(taskDTO, createdTask);
-//
-//        verify(userRepository, times(1)).findById(USER_ID);
-//        verify(taskRepository, times(1)).save(taskEntity);
-//        verify(taskMapper, times(1)).toEntity(taskDTO);
-//        verify(taskMapper, times(1)).toDTO(taskEntity);
-//
-//    }
+    @Test
+    void createTaskTest_Successfully() {
 
-//    @ParameterizedTest
-//    @EnumSource(TaskFields.class)
-//    void changeTaskTest_Successfully(TaskFields field) {
-//
-//        Optional<TaskEntity> taskEntityOptional = Optional.of(taskEntity);
-//
-//        when(taskRepository.findById(taskDTO.getId())).thenReturn(taskEntityOptional);
-//        when(taskMapper.toDTO(taskEntity)).thenReturn(taskDTO);
-//
-//        TaskDTO changedTask = taskService.changeTask(taskDTO, field);
-//
-//        switch (field) {
-//            case TITLE -> assertEquals(taskDTO.getTitle(), changedTask.getTitle());
-//            case DESCRIPTION -> assertEquals(taskDTO.getDescription(), changedTask.getDescription());
-//            case STATUS -> assertEquals(taskDTO.getStatus(), changedTask.getStatus());
-//            case DEADLINE -> assertEquals(taskDTO.getDeadline(), changedTask.getDeadline());
-//            default -> fail("Неизвестное поле");
-//        }
-//
-//        verify(taskRepository, times(1)).findByUserEntity_Id(anyLong());
-//        verify(taskRepository, times(1)).save(taskEntity);
-//        verify(taskMapper, times(1)).toDTO(taskEntity);
-//
-//    }
+        List<TaskEntity> taskEntityList = List.of(taskEntity);
 
+        when(taskRepository.findByUserEntity_Id(USER_ID)).thenReturn(taskEntityList);
+        when(taskMapper.toEntity(taskDTO)).thenReturn(taskEntity);
+        when(taskRepository.save(taskEntity)).thenReturn(taskEntity);
+        when(taskMapper.toDTO(taskEntity)).thenReturn(taskDTO);
+
+        TaskDTO createdTask = taskService.createTask(taskDTO, USER_ID);
+
+        assertEquals(taskDTO, createdTask);
+
+        verify(taskMapper, times(1)).toEntity(taskDTO);
+        verify(taskRepository, times(1)).save(taskEntity);
+        verify(taskMapper, times(1)).toDTO(taskEntity);
+
+    }
+
+    @ParameterizedTest
+    @EnumSource(TaskFields.class)
+    void changeTaskTest_Successfully(TaskFields field) {
+
+        Optional<TaskEntity> taskEntityOptional = Optional.of(taskEntity);
+
+        when(taskRepository.findById(taskDTO.getId())).thenReturn(taskEntityOptional);
+        when(taskRepository.save(taskEntity)).thenReturn(taskEntity);
+        when(taskMapper.toDTO(taskEntity)).thenReturn(taskDTO);
+
+        TaskDTO changedTask = taskService.changeTask(taskDTO, field);
+
+        switch (field) {
+            case TITLE -> assertEquals(taskDTO.getTitle(), changedTask.getTitle());
+            case DESCRIPTION -> assertEquals(taskDTO.getDescription(), changedTask.getDescription());
+            case STATUS -> assertEquals(taskDTO.getStatus(), changedTask.getStatus());
+            case DEADLINE -> assertEquals(taskDTO.getDeadline(), changedTask.getDeadline());
+            default -> fail("Неизвестное поле");
+        }
+
+        verify(taskRepository, times(1)).findById(anyLong());
+        verify(taskRepository, times(1)).save(taskEntity);
+        verify(taskMapper, times(1)).toDTO(taskEntity);
+
+    }
 
 }

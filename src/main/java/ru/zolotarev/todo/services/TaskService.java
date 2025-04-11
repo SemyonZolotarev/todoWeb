@@ -75,7 +75,7 @@ public class TaskService {
     }
 
     @Transactional
-    public List<TaskDTO> sortTaskByDeadline(Long userId, SortByDeadlineMethods method) {
+    public List<TaskDTO> sortTasksByDeadline(Long userId, SortByDeadlineMethods method) {
 
         List<TaskEntity> sortedTasks =
                 taskRepository.findByUserEntity_Id(userId)
