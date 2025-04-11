@@ -58,9 +58,9 @@ public class TaskController {
 
     @GetMapping("/deadline")
     public ResponseEntity<?> tasksByDeadline(@PathVariable Long userId,
-                                             @RequestParam SortByDeadlineMethods methods) {
+                                             @RequestParam SortByDeadlineMethods method) {
         try {
-            return ResponseEntity.ok(taskService.sortTaskByDeadline(userId, methods));
+            return ResponseEntity.ok(taskService.sortTaskByDeadline(userId, method));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Ошибка сортировки задач по дедлайну.");
         }

@@ -10,6 +10,7 @@ import ru.zolotarev.todo.mappers.UserMapper;
 import ru.zolotarev.todo.repositories.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
